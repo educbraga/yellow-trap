@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="logo.png" alt="Logo do Classificador de Insetos em Armadilhas Amarelas" width="220">
+  <img src="logo.png" alt="Logo do Classificador de Insetos em Armadilhas Amarelas">
 </p>
 
 # Classificador de Insetos em Armadilhas Amarelas
