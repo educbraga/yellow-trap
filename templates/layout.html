@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Classificador de Insetos</title>
+    {{ include_static 'app.css' }}
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="{{ =url('index') }}">Classificador de Insetos</a>
+      <nav>
+        <a href="{{ =url('index') }}">Classificar</a>
+        <a href="{{ =url('metrics') }}">Metricas</a>
+      </nav>
+    </header>
+    <main class="shell">
+      {{ include }}
+    </main>
+  </body>
+</html>

@@ -1,0 +1,82 @@
+{{ extend 'layout.html' }}
+
+<section class="panel">
+  <p class="eyebrow">Avaliacao offline</p>
+  <h1>Metricas do classificador</h1>
+
+  {{ if not metrics: }}
+  <p class="notice">Metricas ainda nao geradas. Rode <code>python scripts/pipeline.py evaluate</code>.</p>
+  {{ else: }}
+  <p class="lead">
+    AUC macro one-vs-rest:
+    {{ if metrics.get('roc_auc_macro_ovr') is not None: }}
+      <strong>{{ =round(metrics['roc_auc_macro_ovr'], 4) }}</strong>
+    {{ else: }}
+      <strong>nao aplicavel</strong>
+    {{ pass }}
+  </p>
+
+  {{ if metrics.get('split'): }}
+  <div class="split-summary">
+    <h2>Split de avaliacao</h2>
+    <dl>
+      <div>
+        <dt>Estrategia</dt>
+        <dd>{{ =metrics['split'].get('strategy') }}</dd>
+      </div>
+      <div>
+        <dt>Crops treino/teste</dt>
+        <dd>{{ =metrics['split'].get('train_size') }} / {{ =metrics['split'].get('test_size') }}</dd>
+      </div>
+      <div>
+        <dt>Imagens originais treino/teste</dt>
+        <dd>{{ =metrics['split'].get('train_groups') }} / {{ =metrics['split'].get('test_groups') }}</dd>
+      </div>
+      <div>
+        <dt>Sobreposicao de imagens originais</dt>
+        <dd>{{ =metrics['split'].get('group_overlap_count') }}</dd>
+      </div>
+    </dl>
+    <p class="hint">
+      O teste separa por imagem original da armadilha. Assim, recortes da mesma foto nao entram
+      ao mesmo tempo no treino e no teste.
+    </p>
+  </div>
+  {{ pass }}
+
+  <div class="metrics-images">
+    {{ if confusion_matrix_url: }}
+    <img src="{{ =confusion_matrix_url }}" alt="Matriz de confusao">
+    {{ pass }}
+    {{ if roc_auc_url: }}
+    <img src="{{ =roc_auc_url }}" alt="Curva ROC AUC">
+    {{ pass }}
+  </div>
+
+  <h2>Precision, recall e F1</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Classe</th>
+        <th>Precision</th>
+        <th>Recall</th>
+        <th>F1</th>
+        <th>Support</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{ for cls, values in metrics['classification_report'].items(): }}
+      {{ if isinstance(values, dict) and 'precision' in values: }}
+      <tr>
+        <td>{{ =cls }}</td>
+        <td>{{ =round(values['precision'], 4) }}</td>
+        <td>{{ =round(values['recall'], 4) }}</td>
+        <td>{{ =round(values['f1-score'], 4) }}</td>
+        <td>{{ =int(values['support']) }}</td>
+      </tr>
+      {{ pass }}
+      {{ pass }}
+    </tbody>
+  </table>
+  {{ pass }}
+</section>

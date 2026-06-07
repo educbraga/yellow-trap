@@ -1,0 +1,43 @@
+{{ extend 'layout.html' }}
+
+{{ if error: }}
+<section class="panel">
+  <h1>Falha na classificacao</h1>
+  <p class="notice">{{ =error }}</p>
+  <a class="button-link" href="{{ =url('index') }}">Voltar</a>
+</section>
+{{ else: }}
+<section class="result-layout">
+  <div class="panel">
+    <p class="eyebrow">Classe prevista</p>
+    <h1>{{ =prediction['class_name'] }}</h1>
+    <p class="confidence">{{ =round(prediction['confidence'] * 100, 1) }}% de confianca aproximada</p>
+    <img class="uploaded" src="{{ =upload_url }}" alt="Imagem enviada">
+
+    <h2>Probabilidades por KNN</h2>
+    <div class="prob-list">
+      {{ for item in prediction['probabilities']: }}
+      <div>
+        <span>{{ =item['label'] }} - {{ =item['class_name'] }}</span>
+        <strong>{{ =round(item['probability'] * 100, 1) }}%</strong>
+      </div>
+      {{ pass }}
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Imagens mais parecidas</h2>
+    <div class="similar-grid">
+      {{ for neighbor in neighbors: }}
+      <article>
+        <img src="{{ =neighbor['url'] }}" alt="{{ =neighbor['class_name'] }}">
+        <strong>{{ =neighbor['label'] }}</strong>
+        <span>{{ =neighbor['class_name'] }}</span>
+        <small>distancia {{ =round(neighbor['distance'], 4) }}</small>
+      </article>
+      {{ pass }}
+    </div>
+  </div>
+</section>
+<p class="back-link"><a href="{{ =url('index') }}">Classificar outra imagem</a></p>
+{{ pass }}

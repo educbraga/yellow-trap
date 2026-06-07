@@ -1,0 +1,27 @@
+{
+  "classes": {
+    "MR": "Macrolophus pygmaeus",
+    "NC": "Nesidiocoris tenuis",
+    "WF": "Trialeurodes vaporariorum"
+  },
+  "k_neighbors": 5,
+  "metric": "cosine",
+  "split_strategy": "stratified_group_kfold_by_source_image",
+  "n_splits": 5,
+  "random_state": 42,
+  "train_size": 1439,
+  "test_size": 361,
+  "train_groups": 212,
+  "test_groups": 52,
+  "group_overlap_count": 0,
+  "train_class_counts": {
+    "MR": 480,
+    "NC": 479,
+    "WF": 480
+  },
+  "test_class_counts": {
+    "MR": 120,
+    "NC": 121,
+    "WF": 120
+  }
+}

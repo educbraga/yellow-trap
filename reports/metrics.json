@@ -1,0 +1,83 @@
+{
+  "classes": {
+    "MR": "Macrolophus pygmaeus",
+    "NC": "Nesidiocoris tenuis",
+    "WF": "Trialeurodes vaporariorum"
+  },
+  "labels": [
+    "MR",
+    "NC",
+    "WF"
+  ],
+  "split": {
+    "strategy": "stratified_group_kfold_by_source_image",
+    "n_splits": 5,
+    "random_state": 42,
+    "train_size": 1439,
+    "test_size": 361,
+    "train_groups": 212,
+    "test_groups": 52,
+    "group_overlap_count": 0,
+    "train_class_counts": {
+      "MR": 480,
+      "NC": 479,
+      "WF": 480
+    },
+    "test_class_counts": {
+      "MR": 120,
+      "NC": 121,
+      "WF": 120
+    }
+  },
+  "classification_report": {
+    "Macrolophus pygmaeus": {
+      "precision": 0.98989898989899,
+      "recall": 0.8166666666666667,
+      "f1-score": 0.8949771689497716,
+      "support": 120.0
+    },
+    "Nesidiocoris tenuis": {
+      "precision": 0.8571428571428571,
+      "recall": 0.9917355371900827,
+      "f1-score": 0.9195402298850575,
+      "support": 121.0
+    },
+    "Trialeurodes vaporariorum": {
+      "precision": 0.9836065573770492,
+      "recall": 1.0,
+      "f1-score": 0.9917355371900827,
+      "support": 120.0
+    },
+    "accuracy": 0.9362880886426593,
+    "macro avg": {
+      "precision": 0.943549468139632,
+      "recall": 0.9361340679522497,
+      "f1-score": 0.9354176453416372,
+      "support": 361.0
+    },
+    "weighted avg": {
+      "precision": 0.9433101146465662,
+      "recall": 0.9362880886426593,
+      "f1-score": 0.9353736635813696,
+      "support": 361.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      98,
+      20,
+      2
+    ],
+    [
+      1,
+      120,
+      0
+    ],
+    [
+      0,
+      0,
+      120
+    ]
+  ],
+  "roc_auc_macro_ovr": 0.9870579617373281
+}

@@ -1,0 +1,55 @@
+{{ extend 'layout.html' }}
+
+<section class="panel">
+  <div>
+    <p class="eyebrow">Trabalho academico</p>
+    <h1>Classificador local de insetos recortados</h1>
+    <p class="lead">
+      Envie uma imagem de inseto ja recortada. O sistema extrai caracteristicas visuais
+      com ResNet50, classifica com KNN e mostra imagens parecidas da base.
+    </p>
+  </div>
+
+  {{ if not artifacts_ready: }}
+  <div class="notice">
+    Artefatos de ML ainda nao encontrados. Rode:
+    <code>python scripts/pipeline.py all</code>.
+  </div>
+  {{ pass }}
+
+  <form class="upload-form" action="{{ =url('predict') }}" method="post" enctype="multipart/form-data">
+    <label for="image">Imagem do inseto</label>
+    <input id="image" name="image" type="file" accept="image/png,image/jpeg,image/webp" required>
+    <button type="submit">Classificar</button>
+  </form>
+</section>
+
+{{ if demo_images: }}
+<section class="panel section-gap">
+  <p class="eyebrow">Exemplos para demonstracao</p>
+  <h2>Classificar uma imagem da base</h2>
+  <div class="demo-grid">
+    {{ for image in demo_images: }}
+    <a class="demo-card" href="{{ =url('predict_demo_image', [image['label'], image['filename']]) }}">
+      <img src="{{ =image['url'] }}" alt="{{ =image['class_name'] }}">
+      <strong>{{ =image['label'] }}</strong>
+      <span>{{ =image['class_name'] }}</span>
+    </a>
+    {{ pass }}
+  </div>
+</section>
+{{ pass }}
+
+<section class="grid">
+  {{ for label, name in classes.items(): }}
+  <article class="class-item">
+    <strong>{{ =label }}</strong>
+    <span>{{ =name }}</span>
+  </article>
+  {{ pass }}
+</section>
+
+<p class="disclaimer">
+  Trabalho academico demonstrativo. Nao faz diagnostico agronomico, recomendacao de defensivo
+  ou identificacao profissional de pragas.
+</p>
