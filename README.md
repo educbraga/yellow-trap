@@ -187,3 +187,189 @@ reinstale as dependências:
 source .venv/bin/activate
 pip install -r requirements.txt
 ```
+
+<hr>
+
+# Yellow Sticky Traps Insect Classifier
+
+This repository contains a simple postgraduate project that combines a web
+application with an image classifier. The idea is to receive an already cropped
+insect image, extract visual features with a pre-trained ResNet50, classify the
+crop with KNN, and show similar images from the dataset.
+
+The project serves as a demonstration of integration between a web framework,
+image processing, and machine learning. It should not be treated as a ready-to-use
+field solution, does not provide agronomic diagnosis, and does not replace
+professional pest identification.
+
+## What the application does
+
+- Receives uploads of JPG, JPEG, PNG, or WEBP images.
+- Classifies insect crops into three dataset classes.
+- Shows the predicted class and an approximate confidence score calculated by KNN.
+- Displays the reference images most similar to the submitted crop.
+- Presents a simple page with offline experiment metrics.
+
+Important: the application expects an already cropped insect image. It does not
+automatically detect insects in a complete photo of the trap.
+
+## Classes used
+
+| Code | Class |
+| --- | --- |
+| MR | Macrolophus pygmaeus |
+| NC | Nesidiocoris tenuis |
+| WF | Trialeurodes vaporariorum |
+
+## Technologies
+
+- Python
+- Emmett
+- PyTorch and torchvision
+- scikit-learn
+- Pillow
+- matplotlib and seaborn
+
+## How it works
+
+The original dataset contains images of yellow sticky traps and XML annotations in
+PASCAL VOC format. The project pipeline uses these annotations to generate insect
+crops and train the classifier.
+
+General flow:
+
+1. Read the dataset XML annotations.
+2. Crop the annotated insects and standardize each image to 224 x 224 pixels.
+3. Use a pre-trained ResNet50 as a feature extractor.
+4. Train a KNN with cosine metric over the extracted embeddings.
+5. Evaluate the model on a test set separated by original image.
+6. Use the generated artifacts in the web application.
+
+The separation by original image prevents crops from the same trap photo from
+appearing in both the training and test sets.
+
+## Experiment results
+
+The results below were generated from the artifacts and metrics present in the
+repository. They help evaluate the behavior of the classifier on this dataset,
+but they do not mean that the system is validated for real field use.
+
+- Accuracy: 93.63%
+- Macro one-vs-rest AUC: 0.9871
+- Training crops: 1439
+- Test crops: 361
+- Original images in training: 212
+- Original images in test: 52
+- Overlap of original images between training and test: 0
+
+The detailed metrics are in `reports/metrics.json`, and the confusion matrix and
+ROC curve images are in `reports/`.
+
+## Main structure
+
+```text
+app.py                  Web routes and upload screen
+classifier.py           Dataset preparation, feature extraction, training, and prediction
+scripts/pipeline.py     Command to prepare, train, and evaluate
+templates/              HTML screens
+static/app.css          Interface styles
+requirements.txt        Project dependencies
+```
+
+The repository includes the original dataset in `yellow-sticky-traps-dataset-main/`
+and trained artifacts in `artifacts/`. Local environment files, cache, uploads,
+and zip files are kept out of Git.
+
+## Dataset credits
+
+The dataset used in this project comes from a version with revised labels of the
+Yellow Sticky Traps Dataset, described in the original README at
+`yellow-sticky-traps-dataset-main/README.md`.
+
+According to the dataset documentation, this version was created by Maurice
+Deserno and Alexia Briassouli, with help from Carolin Vey, based on the original
+set "Raw data from Yellow Sticky Traps with insects for training of deep learning
+Convolutional Neural Network for object detection", published by A.T.
+Nieuwenhuizen and collaborators.
+
+For complete details about authorship, article, DOI, and data source, see the
+original dataset README inside the `yellow-sticky-traps-dataset-main/` folder.
+
+## Install
+
+Create and activate the virtual environment:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+Install the dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+## Prepare the dataset, train, and evaluate
+
+The application already comes with trained artifacts. To regenerate everything
+from scratch, run:
+
+```bash
+python scripts/pipeline.py all
+```
+
+It is also possible to run each step separately:
+
+```bash
+python scripts/pipeline.py prepare
+python scripts/pipeline.py train
+python scripts/pipeline.py evaluate
+```
+
+The steps generate:
+
+- `data/crops/`: insect crops;
+- `data/crops_manifest.csv`: crop manifest;
+- `static/reference/`: images used as examples in the interface;
+- `artifacts/`: KNN model, embeddings, and metadata;
+- `reports/`: metrics and evaluation charts.
+
+## Run the application
+
+With the virtual environment active:
+
+```bash
+emmett develop
+```
+
+Access:
+
+```text
+http://127.0.0.1:8000
+```
+
+On the home screen, you can upload a cropped insect image, use examples from the
+dataset, and open the metrics screen.
+
+## Common problems
+
+If the application warns that the artifacts do not exist, run:
+
+```bash
+python scripts/pipeline.py all
+```
+
+If the dataset is not found, confirm that the folder below is in the project root:
+
+```text
+yellow-sticky-traps-dataset-main/
+```
+
+If the `emmett develop` command is not found, activate the virtual environment and
+reinstall the dependencies:
+
+```bash
+source .venv/bin/activate
+pip install -r requirements.txt
+```
